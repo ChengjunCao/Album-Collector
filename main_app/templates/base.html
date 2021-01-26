@@ -20,8 +20,9 @@
                     <li><a href="/" class="left brand-logo">&nbsp;&nbsp;AlbumCollector</a></li>
                 </ul>
                 <ul class="right">
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/albums">View All My Albums</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'albums_create' %}">Add an Album</a></li>
+                    <li><a href="{% url 'index' %}">View All My Albums</a></li>
                 </ul>
             </div>
         </nav>
