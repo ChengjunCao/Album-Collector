@@ -36,3 +36,10 @@ class Track(models.Model):
 
     class Meta:
         ordering = ['number']
+
+class Cover(models.Model):
+    url = models.CharField(max_length=200)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Cover for album_id: {self.album_id} @{self.url}"
