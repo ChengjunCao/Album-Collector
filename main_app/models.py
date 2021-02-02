@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 DISC = (
     (1, 1),
@@ -13,6 +14,7 @@ class Album(models.Model):
     artists = models.CharField(max_length=100)
     genre = models.CharField(max_length=100)
     year = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

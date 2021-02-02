@@ -6,10 +6,10 @@
     <div class="col s6">
         <div class="card">
             <div class="card-content">
-                <span class="card-title">{{ object.name }}</span>
-                <p>Artists: {{ object.artists }}</p>
-                <p>Genre: {{ object.genre }}</p>
-                <p>Year: {{ object.year }}</p>
+                <span class="card-title">{{ album.name }}</span>
+                <p>Artists: {{ album.artists }}</p>
+                <p>Genre: {{ album.genre }}</p>
+                <p>Year: {{ album.year }}</p>
             </div>
             <div class="card-action">
                 <a href="{% url 'albums_update' album.id %}">Edit</a>

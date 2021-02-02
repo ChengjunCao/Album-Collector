@@ -1,31 +1,34 @@
 from django.shortcuts import render, redirect
 from .models import Album, Cover
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import TrackForm
 import uuid
 import boto3
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 S3_BASE_URL = 'https://s3.us-east-2.amazonaws.com/'
 BUCKET = 'albumcollector'
 
-class AlbumList(ListView):
-  model = Album
-  template_name = 'albums/index.html'
+def albums_index(request):
+  albums = Album.objects.filter(user=request.user)
+  return render(request, 'albums/index.html', {'albums': albums})
 
-class AlbumDetail(DetailView):
-  model = Album
-  template_name = 'albums/detail.html'
-
-  def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['track_form'] = TrackForm()
-      return context
+def albums_detail(request, album_id):
+  album = Album.objects.get(id=album_id)
+  track_form = TrackForm()
+  return render(request, 'albums/detail.html', {'album': album, 'track_form': track_form,})
 
 class AlbumCreate(CreateView):
   model = Album
-  fields = '__all__'
-  success_url = '/albums/'
+  fields = ['name', 'artists', 'genre', 'year']
+
+  def form_valid(self, form):
+    # Assign the logged in user (self.request.user)
+    form.instance.user = self.request.user  # form.instance is the cat
+    # Let the CreateView do its job as usual
+    return super().form_valid(form)
 
 class AlbumUpdate(UpdateView):
   model = Album
@@ -67,6 +70,20 @@ def add_cover(request, album_id):
     except:
       print('An error occurred uploading file to S3')
   return redirect('detail', pk=album_id)
+
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      user = form.save()
+      login(request, user)
+      return redirect('index')
+    else:
+      error_message = 'Invalid sign up - try again'
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'registration/signup.html', context)
 
 # View without CBV
 

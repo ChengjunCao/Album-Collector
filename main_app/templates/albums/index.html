@@ -3,7 +3,7 @@
 
 <h1>Album List</h1>
 
-{% for album in object_list %}
+{% for album in albums %}
 <div class="card">
     <a href="{% url 'detail' album.id %}">
         <div class="card-content">
